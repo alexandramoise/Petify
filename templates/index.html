@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Petify Home Page</title>
+</head>
+<body>
+    <main>
+        <section>
+            <h2>What is Petify?</h2>
+            <p>The perfect place where animal lovers can meet their furry soulmate</p>
+            <button id="buttonToDbCheck">To DbConnection Checking Page</button>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Petify</p>
+    </footer>
+</body>
+
+<script>
+var buttonToDbCheck = document.getElementById("buttonToDbCheck");
+buttonToDbCheck.addEventListener("click", function () {
+        window.location.href = "/db";
+    });
+</script>
+</html>
