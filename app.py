@@ -1,14 +1,56 @@
 from flask import Flask, render_template
+from flask import request
 
 app = Flask(__name__)
 
+categories = [
+    {"name": "Cat", "image": "cat-1.jpg", "description": "A fluffy and cute cat.", "button_link": "/cat_page.html", "type": "Pisică", "age": "Pui", "location": "Oraș 1"},
+    {"name": "Dog", "image": "dog-1.jpg", "description": "A loyal and friendly dog.", "button_link": "/dog_page.html"},
+    {"name": "Cat", "image": "cat-2.jpg", "description": "A fluffy and cute cat.", "button_link": "/cat_page.html", "type": "Pisică", "age": "Pui", "location": "Oraș 1"},
+    {"name": "Dog", "image": "dog-2.jpg", "description": "A loyal and friendly dog.", "button_link": "/dog_page.html"},
+    {"name": "Parrot", "image": "parrot-1.jpg", "description": "A colourful parrot.", "button_link": "/dog_page.html"},
+    # ... alte categorii
+]
+
+# Ruta pentru pagina de start
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', categories=categories)
+
+# Ruta dinamică pentru fiecare categorie de animal
+@app.route('/<category_name>')
+def category_page(category_name):
+    # Găsește categoria corespunzătoare
+    category = next((c for c in categories if c['name'].lower() == category_name.lower()), None)
+    if category:
+        return render_template('category_page.html', category=category)
+    else:
+        # Poți trata cazul în care categoria nu există, de exemplu, afișând o pagină de eroare sau redirectând către altă pagină
+        return render_template('category_not_found.html', category_name=category_name)
+
+@app.route('/search_results')
+def search_results():
+    try:
+        animal_type = request.args.get('animal_type')
+        age = request.args.get('age')
+        location = request.args.get('location')
+
+        # Filtrare după parametrii de căutare și obținere de rezultate din lista de animale
+        filtered_animals = [animal for animal in categories if
+                            (not animal_type or animal.get('type') == animal_type) and
+                            (not age or animal.get('age') == age) and
+                            (not location or animal.get('location') == location)]
+
+        return render_template('index.html', categories=filtered_animals)
+    except Exception as e:
+        # Afișează detalii despre eroare în consolă
+        print(str(e))
+        # Oferă un răspuns HTTP de eroare 500
+        abort(500)
 
 @app.route('/index.html')
 def index2():
-    return render_template('index.html')
+    return render_template('index.html', categories=categories)
 
 @app.route('/about.html')
 def about():

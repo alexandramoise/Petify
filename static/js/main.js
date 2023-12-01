@@ -79,3 +79,26 @@
     
 })(jQuery);
 
+function filterCards() {
+    var animalType = $('#search-form select[name="animal_type"]').val();
+    var age = $('#search-form select[name="age"]').val();
+    var location = $('#search-form select[name="location"]').val();
+
+    $('.animal-card').hide();  // Ascunde toate cardurile
+
+    // Afișează doar cardurile care corespund filtrelor selectate
+    $('.animal-card').each(function() {
+        var card = $(this);
+        var cardType = card.data('type');
+        var cardAge = card.data('age');
+        var cardLocation = card.data('location');
+
+        if ((!animalType || cardType === animalType) &&
+            (!age || cardAge === age) &&
+            (!location || cardLocation === location)) {
+            card.show();
+        }
+    });
+}
+
+
