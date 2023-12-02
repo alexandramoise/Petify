@@ -60,7 +60,32 @@ def about():
 def contact():
     return render_template('contact.html')
 
-@app.route('/job-detail.html')
+@app.route('/adoption.html')
+def adoption_form():
+    return render_template('adoption.html')
+
+@app.route('/events.html')
+def events():
+    return render_template('events.html')
+
+@app.route('/facts.html')
+def facts():
+    return render_template('facts.html')
+
+@app.route('/questions.html')
+def questions():
+    return render_template('questions.html')
+
+@app.route('/register.html')
+def register():
+    return render_template('register.html')
+
+@app.route('/login.html')
+def login():
+    return render_template('login.html')
+
+
+""" @app.route('/job-detail.html')
 def job_detail():
     return render_template('job-detail.html')
 
@@ -79,14 +104,7 @@ def category():
 @app.route('/404.html')
 def error():
     return render_template('404.html')
-
-@app.route('/register.html')
-def register():
-    return render_template('register.html')
-
-@app.route('/login.html')
-def login():
-    return render_template('login.html')
+ """
 
 if __name__ == '__main__':
     app.run(debug=True)
