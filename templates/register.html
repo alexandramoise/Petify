@@ -40,7 +40,7 @@
                         <div class="card shadow-lg rounded">
                             <div class="card-body p-5">
                                 <h1 class="h3 mb-4 text-center">Register</h1>
-                                <form>
+                                <form id="userForm">
                                     <div class="mb-3">
                                         <label for="username" class="form-label">Username</label>
                                         <input type="text" class="form-control" id="username" name="username" required>
@@ -54,7 +54,7 @@
                                         <input type="password" class="form-control" id="password" name="password" required>
                                     </div>
                                     <div class="d-grid">
-                                        <button type="submit" class="btn btn-primary btn-block">Register</button>
+                                        <button type="button" class="btn btn-primary btn-block" onclick="updateUsersJSON()">Register</button>
                                     </div>
                                 </form>
                             </div>
@@ -68,9 +68,8 @@
         <!-- Restul codului HTML -->
 
     </div>
-
     <!-- Restul codului JavaScript -->
-
+    <script src="/static/js/register.js"></script>
 </body>
 
 </html>
