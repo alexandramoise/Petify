@@ -5,10 +5,10 @@ app = Flask(__name__)
 
 categories = [
     {"name": "Cat", "image": "cat-1.jpg", "description": "A fluffy and cute cat.", "button_link": "/cat_page.html", "type": "Pisică", "age": "Pui", "location": "Oraș 1"},
-    {"name": "Dog", "image": "dog-1.jpg", "description": "A loyal and friendly dog.", "button_link": "/dog_page.html"},
+    {"name": "Dog", "image": "dog-1.jpg", "description": "A loyal and friendly dog.", "button_link": "/dog_page.html", "type": "Câine", "age": "Pui", "location": "Oraș 2"},
     {"name": "Cat", "image": "cat-2.jpg", "description": "A fluffy and cute cat.", "button_link": "/cat_page.html", "type": "Pisică", "age": "Pui", "location": "Oraș 1"},
-    {"name": "Dog", "image": "dog-2.jpg", "description": "A loyal and friendly dog.", "button_link": "/dog_page.html"},
-    {"name": "Parrot", "image": "parrot-1.jpg", "description": "A colourful parrot.", "button_link": "/dog_page.html"},
+    {"name": "Dog", "image": "dog-2.jpg", "description": "A loyal and friendly dog.", "button_link": "/dog_page.html", "type": "Câine", "age": "Adult", "location": "Oraș 2"},
+    {"name": "Parrot", "image": "parrot-1.jpg", "description": "A colourful parrot.", "button_link": "/dog_page.html", "type": "Papagal", "age": "Pui", "location": "Oraș 1"},
     # ... alte categorii
 ]
 
@@ -27,21 +27,33 @@ def category_page(category_name):
     else:
         # Poți trata cazul în care categoria nu există, de exemplu, afișând o pagină de eroare sau redirectând către altă pagină
         return render_template('category_not_found.html', category_name=category_name)
-
+            
 @app.route('/search_results')
 def search_results():
     try:
         animal_type = request.args.get('animal_type')
         age = request.args.get('age')
         location = request.args.get('location')
-
+        print(f'Argumente: ',{animal_type}, {age}, {location})
+        
         # Filtrare după parametrii de căutare și obținere de rezultate din lista de animale
         filtered_animals = [animal for animal in categories if
                             (not animal_type or animal.get('type') == animal_type) and
                             (not age or animal.get('age') == age) and
                             (not location or animal.get('location') == location)]
+        
+        filtering_results = []
+        for animal in categories:
+            if((not animal_type or animal.get("type") == animal_type)
+             and (not age or animal.get("age") == age)
+             and (not location or animal.get("location") == location)):
+                filtering_results.append(animal)
 
-        return render_template('index.html', categories=filtered_animals)
+        
+        for el in filtering_results:
+            print(f'la filtrare apare: ', el)
+        
+        return render_template('index.html', categories=filtering_results)
     except Exception as e:
         # Afișează detalii despre eroare în consolă
         print(str(e))
@@ -84,6 +96,10 @@ def register():
 def login():
     return render_template('login.html')
 
+@app.route('/category.html')
+def category():
+    return render_template('category.html')
+
 
 """ @app.route('/job-detail.html')
 def job_detail():
@@ -96,10 +112,6 @@ def job_list():
 @app.route('/testimonial.html')
 def testimonial():
     return render_template('testimonial.html')
-
-@app.route('/category.html')
-def category():
-    return render_template('category.html')
 
 @app.route('/404.html')
 def error():

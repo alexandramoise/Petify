@@ -83,7 +83,7 @@
                         <div class="container">
                             <div class="row justify-content-start">
                                 <div class="col-10 col-lg-8">
-                                    <h1 class="display-3 text-white animated slideInDown mb-4">Find The Perfect Animal for your soul</h1>
+                                    <h1 class="display-3 text-white animated slideInDown mb-4">Gaseste-ti animalutul pereche</h1>
                                     <p class="fs-5 fw-medium text-white mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
                                     <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Search for an animal</a>
                                     <a href="" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Find A Shelter</a>
@@ -98,7 +98,7 @@
                         <div class="container">
                             <div class="row justify-content-start">
                                 <div class="col-10 col-lg-8">
-                                    <h1 class="display-3 text-white animated slideInDown mb-4">Find The Best Startup Job That Fit You</h1>
+                                    <h1 class="display-3 text-white animated slideInDown mb-4">Adu in familia ta iubitoare un nou membru pufos</h1>
                                     <p class="fs-5 fw-medium text-white mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
                                     <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Search An Animal</a>
                                     <a href="" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Find A Shelter</a>
@@ -120,9 +120,9 @@
                         <div class="col-md-4">
                             <select name="animal_type" class="form-select border-0">
                                 <option value="" selected>Tip animal</option>
-                                <option value="cat">Pisică</option>
-                                <option value="dog">Câine</option>
-                                <option value="parrot">Papagal</option>
+                                <option value="Pisică">Pisică</option>
+                                <option value="Câine">Câine</option>
+                                <option value="Papagal">Papagal</option>
                                 <!-- Adaugă altele după nevoie -->
                             </select>
                         </div>
@@ -131,8 +131,8 @@
                         <div class="col-md-4">
                             <select name="age" class="form-select border-0">
                                 <option value="" selected>Vârstă</option>
-                                <option value="puppy">Pui</option>
-                                <option value="adult">Adult</option>
+                                <option value="Pui">Pui</option>
+                                <option value="Adult">Adult</option>
                                 <!-- Adaugă altele după nevoie -->
                             </select>
                         </div>
@@ -141,8 +141,8 @@
                         <div class="col-md-4">
                             <select name="location" class="form-select border-0">
                                 <option value="" selected>Oraș</option>
-                                <option value="city1">Oraș 1</option>
-                                <option value="city2">Oraș 2</option>
+                                <option value="Oraș 1">Oraș 1</option>
+                                <option value="Oraș 2">Oraș 2</option>
                                 <!-- Adaugă altele după nevoie -->
                             </select>
                         </div>
@@ -162,19 +162,24 @@
             <div class="container">
                 <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">Exploreaza lista de animalute</h1>
                 <!-- index.html -->
+                {% if categories|length > 0 %}
                 <div class="row row-cols-1 row-cols-md-3 g-4">
                     {% for category in categories %}
-                    <div class="col">
-                        <div class="card h-100">
-                            <img src="{{ url_for('static', filename='img/' + category['image']) }}" class="card-img-top" alt="{{ category['name'] }}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ category['name'] }}</h5>
-                                <p class="card-text">{{ category['description'] }}</p>
-                                <a href="{{ url_for('category_page', category_name=category['name']) }}" class="btn btn-primary">Afla mai multe despre mine</a>
+                        <div class="col">
+                            <div class="card h-100">
+                                <img src="{{ url_for('static', filename='img/' + category['image']) }}" class="card-img-top" alt="{{ category['name'] }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ category['name'] }}</h5>
+                                    <p class="card-text">{{ category['description'] }}</p>
+                                    <a href="{{ url_for('category_page', category_name=category['name']) }}" class="btn btn-primary">Afla mai multe despre mine</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     {% endfor %}
+                    {% else %}
+                        <h4 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s" style="color: green;">Nu am gasit animalute pentru preferintele tale</h4>
+                    {% endif %}
+
                 </div> 
             </div>
         </div>
@@ -209,6 +214,7 @@
                 <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">Cauta un adapost</h1>
                 <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
                     <ul class="nav nav-pills d-inline-flex justify-content-center border-bottom mb-5">
+                        <!--
                         <li class="nav-item">
                             <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3 active" data-bs-toggle="pill" href="#tab-1">
                                 <h6 class="mt-n1 mb-0">Featured</h6>
@@ -224,6 +230,7 @@
                                 <h6 class="mt-n1 mb-0">Part Time</h6>
                             </a>
                         </li>
+                        -->
                     </ul>
                     <div class="tab-content">
                         <div id="tab-1" class="tab-pane fade show p-0 active">
