@@ -18,6 +18,7 @@ document.getElementById('login').addEventListener('submit', function (e) {
         alert('Login successful!');  
         window.location.href = 'index.html';
         sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem("userLogged",JSON.stringify(username));
         // Redirect or perform actions after successful login
     } else {
         // Login failed, display error message or take appropriate action
