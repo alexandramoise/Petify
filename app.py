@@ -4,11 +4,11 @@ from flask import request
 app = Flask(__name__)
 
 categories = [
-    {"name": "Cat", "image": "cat-1.jpg", "description": "A fluffy and cute cat.", "button_link": "/cat_page.html", "type": "Pisică", "age": "Pui", "location": "Oraș 1"},
-    {"name": "Dog", "image": "dog-1.jpg", "description": "A loyal and friendly dog.", "button_link": "/dog_page.html", "type": "Câine", "age": "Pui", "location": "Oraș 2"},
-    {"name": "Cat", "image": "cat-2.jpg", "description": "A fluffy and cute cat.", "button_link": "/cat_page.html", "type": "Pisică", "age": "Pui", "location": "Oraș 1"},
-    {"name": "Dog", "image": "dog-2.jpg", "description": "A loyal and friendly dog.", "button_link": "/dog_page.html", "type": "Câine", "age": "Adult", "location": "Oraș 2"},
-    {"name": "Parrot", "image": "parrot-1.jpg", "description": "A colourful parrot.", "button_link": "/dog_page.html", "type": "Papagal", "age": "Pui", "location": "Oraș 1"},
+    {"name": "Pisicuță", "image": "cat-1.jpg", "description": "Pisicuță adorabilă.", "button_link": "/cat_page.html", "type": "Pisică", "age": "Pui", "location": "Oraș 1"},
+    {"name": "Cățel", "image": "dog-1.jpg", "description": "Cățel prietenos și jucăuș.", "button_link": "/dog_page.html", "type": "Câine", "age": "Pui", "location": "Oraș 2"},
+    {"name": "Pisică", "image": "cat-2.jpg", "description": "Pisică pufoasă", "button_link": "/cat_page.html", "type": "Pisică", "age": "Adult", "location": "Oraș 1"},
+    {"name": "Câine", "image": "dog-2.jpg", "description": "Câine loial și jucăuș", "button_link": "/dog_page.html", "type": "Câine", "age": "Adult", "location": "Oraș 2"},
+    {"name": "Papagal", "image": "parrot-1.jpg", "description": "Papagal colorat.", "button_link": "/dog_page.html", "type": "Papagal", "age": "Pui", "location": "Oraș 1"},
     # ... alte categorii
 ]
 

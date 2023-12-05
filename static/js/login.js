@@ -15,13 +15,13 @@ document.getElementById('login').addEventListener('submit', function (e) {
 
     if (user) {
         // Login successful, redirect or perform necessary actions
-        alert('Login successful!');  
+        alert('Conectare cu succes!');  
         window.location.href = 'index.html';
         sessionStorage.setItem('isLoggedIn', 'true');
         sessionStorage.setItem("userLogged",JSON.stringify(username));
         // Redirect or perform actions after successful login
     } else {
         // Login failed, display error message or take appropriate action
-        alert('Invalid username/email or password. Please try again.');
+        alert('Username/email sau parola invalide. Te rog sa incerci din nou.');
     }
 });
