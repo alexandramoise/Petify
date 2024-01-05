@@ -94,56 +94,23 @@
                         </li>
                     </ul>
                     -->
+        <!-- events.html -->
         <div class="tab-content">
-            <div id="tab-1" class="tab-pane fade show p-0 active">
+            {% for event in events %}
                 <div class="job-item p-4 mb-4">
                     <div class="row g-4">
                         <div class="col-sm-12 col-md-8 d-flex align-items-center">
-                            <img class="flex-shrink-0 img-fluid border rounded" src="/static/img/trainingpets1.jpg" alt="" style="width: 80px; height: 80px;">
+                            <img class="flex-shrink-0 img-fluid border rounded" src="{{ url_for('static', filename='img/' + event.image) }}" alt="" style="width: 80px; height: 80px;">
                             <div class="text-start ps-4">
-                                <h5 class="mb-3">TalkSession - cum educam animalul de companie? </h5>
-                                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>Piata Victoriei, Timisoara</span>
-                                <span class="text-truncate me-3"><i class="fas fa-user-alt text-primary me-2"></i>Organizator: Coditele vesele</span>
-                                <span class="text-truncate me-3"><i class="fa fa-comments text-primary me-2"></i>Sesiuni de discutii</span>
+                                <h5 class="mb-3">{{ event.title }}</h5>
+                                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ event.location }}</span>
+                                <span class="text-truncate me-3"><i class="fas fa-user-alt text-primary me-2"></i>Organizator: {{ event.organizer }}</span>
+                                <span class="text-truncate me-3"><i class="fa fa-comments text-primary me-2"></i>{{ event.event_type }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="tab-content">
-            <div id="tab-1" class="tab-pane fade show p-0 active">
-                <div class="job-item p-4 mb-4">
-                    <div class="row g-4">
-                        <div class="col-sm-12 col-md-8 d-flex align-items-center">
-                            <img class="flex-shrink-0 img-fluid border rounded" src="/static/img/catanddog.jpg" alt="" style="width: 80px; height: 80px;">
-                            <div class="text-start ps-4">
-                                <h5 class="mb-3">Targ adoptie</h5>
-                                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>Locatie</span>
-                                <span class="text-truncate me-3"><i class="fas fa-user-alt text-primary me-2"></i>Organizator: Coditele vesele</span>
-                                <span class="text-truncate me-3"><i class="fas fa-school text-primary me-2"></i>Targuri de adoptie</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="tab-content">
-            <div id="tab-1" class="tab-pane fade show p-0 active">
-                <div class="job-item p-4 mb-4">
-                    <div class="row g-4">
-                        <div class="col-sm-12 col-md-8 d-flex align-items-center">
-                            <img class="flex-shrink-0 img-fluid border rounded" src="/static/img/competitionpet1.jpg" alt="" style="width: 80px; height: 80px;">
-                            <div class="text-start ps-4">
-                                <h5 class="mb-3">Concurs pentru catei</h5>
-                                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>Locatie</span>
-                                <span class="text-truncate me-3"><i class="fas fa-user-alt text-primary me-2"></i>Organizator: Coditele vesele</span>
-                                <span class="text-truncate me-3"><i class="fas fa-award text-primary me-2"></i>Concursuri pentru animale</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
         </div>
         </div>

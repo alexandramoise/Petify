@@ -1,0 +1,24 @@
+<!-- add_event.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Add Event</h2>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {{ form.title.label }} {{ form.title(size=32) }}<br>
+        {{ form.image.label }} {{ form.image(size=32) }}<br>
+        {{ form.location.label }} {{ form.location(size=32) }}<br>
+        {{ form.organizer.label }} {{ form.organizer(size=32) }}<br>
+        {{ form.event_type.label }} {{ form.event_type(size=32) }}<br>
+        {{ form.description.label }} {{ form.description(size=32) }}<br>
+        <input type="submit" value="Add">
+    </form>
+    
+    <h2>Existing Events</h2>
+    <ul>
+        {% for event in events %}
+            <li>{{ event.title }} - {{ event.event_type }} - {{ event.location }} - {{ event.organizer }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

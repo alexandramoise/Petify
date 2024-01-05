@@ -34,6 +34,23 @@ class AnimalForm(FlaskForm):
     age = StringField('Age', validators=[DataRequired()])
     location = StringField('Location', validators=[DataRequired()])
 
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    image = db.Column(db.String(100), nullable=False)
+    location = db.Column(db.String(100), nullable=False)
+    organizer = db.Column(db.String(100), nullable=False)
+    event_type = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+
+class EventForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    image = StringField('Image', validators=[DataRequired()])
+    location = StringField('Location', validators=[DataRequired()])
+    organizer = StringField('Organizer', validators=[DataRequired()])
+    event_type = StringField('Event Type', validators=[DataRequired()])
+    description = StringField('Description', validators=[DataRequired()])
+
 @app.route('/add_animal', methods=['GET', 'POST'])
 def add_animal():
     form = AnimalForm()
@@ -94,6 +111,26 @@ def index2():
     print(animals)
     return render_template('index.html', animals=animals)
 
+@app.route('/add_event', methods=['GET', 'POST'])
+def add_event():
+    form = EventForm()
+    events = Event.query.all()
+
+    if form.validate_on_submit():
+        new_event = Event(
+            title=form.title.data,
+            image=form.image.data,
+            location=form.location.data,
+            organizer=form.organizer.data,
+            event_type=form.event_type.data,
+            description=form.description.data
+        )
+        db.session.add(new_event)
+        db.session.commit()
+        return redirect(url_for('add_event'))
+
+    return render_template('add_event.html', form=form, events=events)
+
 @app.route('/about.html')
 def about():
     return render_template('about.html')
@@ -108,7 +145,9 @@ def adoption_form():
 
 @app.route('/events.html')
 def events():
-    return render_template('events.html')
+    events = Event.query.all()
+    print(events)
+    return render_template('events.html', events=events)
 
 @app.route('/facts.html')
 def facts():
