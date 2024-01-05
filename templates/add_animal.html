@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Add Animal</h2>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {{ form.name.label }} {{ form.name(size=32) }}<br>
+        {{ form.image.label }} {{ form.image(size=32) }}<br>
+        {{ form.description.label }} {{ form.description(size=32) }}<br>
+        {{ form.button_link.label }} {{ form.button_link(size=32) }}<br>
+        {{ form.type.label }} {{ form.type(size=32) }}<br>
+        {{ form.age.label }} {{ form.age(size=32) }}<br>
+        {{ form.location.label }} {{ form.location(size=32) }}<br>
+        <input type="submit" value="Add">
+    </form>
+    
+    <h2>Existing Animals</h2>
+    <ul>
+        {% for animal in animals %}
+            <li>{{ animal.name }} - {{ animal.type }} - {{ animal.age }} - {{ animal.location }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+

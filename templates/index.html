@@ -164,16 +164,16 @@
             <div class="container">
                 <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">Exploreaza lista de animalute</h1>
                 <!-- index.html -->
-                {% if categories|length > 0 %}
+                {% if animals|length > 0 %}
                 <div class="row row-cols-1 row-cols-md-3 g-4">
-                    {% for category in categories %}
+                    {% for animal in animals %}
                         <div class="col">
                             <div class="card h-100">
-                                <img src="{{ url_for('static', filename='img/' + category['image']) }}" class="card-img-top" alt="{{ category['name'] }}">
+                                <img src="{{ url_for('static', filename='img/' + animal.image) }}" class="card-img-top" alt="{{ animal.name }}">
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ category['name'] }}</h5>
-                                    <p class="card-text">{{ category['description'] }}</p>
-                                    <a href="{{ url_for('category_page', category_name=category['name']) }}" class="btn btn-primary">Afla mai multe despre mine</a>
+                                    <h5 class="card-title">{{ animal.name }}</h5>
+                                    <p class="card-text">{{ animal.description }}</p>
+                                    <a href="{{ url_for('category_page', category_name=animal.name) }}" class="btn btn-primary">Detalii</a>
                                 </div>
                             </div>
                         </div>
@@ -202,7 +202,7 @@
                         <p><i class="fa fa-check text-primary me-3"></i>Tempor erat elitr rebum at clita</p>
                         <p><i class="fa fa-check text-primary me-3"></i>Aliqu diam amet diam et eos</p>
                         <p><i class="fa fa-check text-primary me-3"></i>Clita duo justo magna dolore erat amet</p>
-                        <a class="btn btn-primary py-3 px-5 mt-3" href="">Acceseaza forumul dedicat</a>
+                        <a  href="events.html" class="btn btn-primary py-3 px-5 mt-3" href="">Acceseaza forumul dedicat</a>
                     </div>
                 </div>
             </div>
