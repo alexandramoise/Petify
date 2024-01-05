@@ -235,16 +235,22 @@
                         -->
                     </ul>
                     <div class="tab-content">
-                        <div id="tab-1" class="tab-pane fade show p-0 active">
-                            <div class="job-item p-4 mb-4">
-                                <div class="row g-4">
-                                    <div class="col-sm-12 col-md-8 d-flex align-items-center">
-                                        <img class="flex-shrink-0 img-fluid border rounded" src="/static/img/dog-1.jpg" alt="" style="width: 80px; height: 80px;">
-                                        <div class="text-start ps-4">
-                                            <h5 class="mb-3">Coditele Vesele</h5>
-                                            <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>Timisoara, Romania</span>
-                                            <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>08 - 16</span>
+                            <div id="tab-1" class="tab-pane fade show p-0 active">
+                                {% for shelter in shelters %}
+                                    <div class="job-item p-4 mb-4">
+                                        <div class="row g-4">
+                                            <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                                                <img class="flex-shrink-0 img-fluid border rounded" src="/static/img/dog-1.jpg" alt="" style="width: 80px; height: 80px;">
+                                                <div class="text-start ps-4">
+                                                    <h5 class="mb-3">{{ shelter.name }}</h5>
+                                                    <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ shelter.location }}</span>
+                                                    <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>{{ shelter.opening_hours }}</span>
+                                                </div>
+                                            </div>
                                         </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
                                     </div>
                                     <!--
                                     <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">

@@ -22,3 +22,9 @@ class EventForm(FlaskForm):
     organizer = StringField('Organizer', validators=[DataRequired()])
     event_type = StringField('Event Type', validators=[DataRequired()])
     description = StringField('Description', validators=[DataRequired()])
+
+class ShelterForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    opening_hours = StringField('Opening Hours', validators=[DataRequired()])
+    location = StringField('Location', validators=[DataRequired()])
+

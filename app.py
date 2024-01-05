@@ -51,6 +51,17 @@ class EventForm(FlaskForm):
     event_type = StringField('Event Type', validators=[DataRequired()])
     description = StringField('Description', validators=[DataRequired()])
 
+class Shelter(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    opening_hours = db.Column(db.String(20), nullable=False)
+    location = db.Column(db.String(50), nullable=False)
+
+class ShelterForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    opening_hours = StringField('Opening Hours', validators=[DataRequired()])
+    location = StringField('Location', validators=[DataRequired()])
+
 @app.route('/add_animal', methods=['GET', 'POST'])
 def add_animal():
     form = AnimalForm()
@@ -75,8 +86,10 @@ def add_animal():
 @app.route('/')
 def index():
     animals = Animal.query.all()
+    shelters = Shelter.query.all()
     print(animals)
-    return render_template('index.html', animals=animals)
+    return render_template('index.html', animals=animals, shelters=shelters)
+
 
 @app.route('/<category_name>')
 def category_page(category_name):
@@ -108,8 +121,9 @@ def search_results():
 @app.route('/index.html')
 def index2():
     animals = Animal.query.all()
+    shelters = Shelter.query.all()
     print(animals)
-    return render_template('index.html', animals=animals)
+    return render_template('index.html', animals=animals, shelters=shelters)
 
 @app.route('/add_event', methods=['GET', 'POST'])
 def add_event():
@@ -130,6 +144,23 @@ def add_event():
         return redirect(url_for('add_event'))
 
     return render_template('add_event.html', form=form, events=events)
+
+@app.route('/add_shelter', methods=['GET', 'POST'])
+def add_shelter():
+    form = ShelterForm()
+    shelters = Shelter.query.all()
+
+    if form.validate_on_submit():
+        new_shelter = Shelter(
+            name=form.name.data,
+            opening_hours=form.opening_hours.data,
+            location=form.location.data
+        )
+        db.session.add(new_shelter)
+        db.session.commit()
+        return redirect(url_for('add_shelter'))
+
+    return render_template('add_shelter.html', form=form, shelters=shelters)
 
 @app.route('/about.html')
 def about():

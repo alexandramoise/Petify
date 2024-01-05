@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Add Shelter</h2>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {{ form.name.label }} {{ form.name(size=32) }}<br>
+        {{ form.opening_hours.label }} {{ form.opening_hours(size=32) }}<br>
+        {{ form.location.label }} {{ form.location(size=32) }}<br>
+        <input type="submit" value="Add">
+    </form>
+
+    <h2>Existing Shelters</h2>
+    <ul>
+        {% for shelter in shelters %}
+            <li>{{ shelter.name }} - {{ shelter.location }} - {{ shelter.opening_hours }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
