@@ -101,7 +101,13 @@
                     <div class="col-md-6 wow fadeIn" data-wow-delay="0.5s">
                         <h1 class="mb-4">{{ category.name }}</h1>
                         <!-- Utilizează |safe pentru a permite interpretarea HTML -->
-                        <p class="mb-4">{{ category.description|safe }}</p>
+                        <p class="mb-4" ><strong>Personalitate: </strong>{{ category.description|safe }}</p>
+                        <p class="mb-4"><strong>Istoric: </strong>{{ category.history|safe }}</p>
+                        <p class="mb-4"><strong>Activitati favorite: </strong>{{ category.activities|safe }}</p>
+                        <p class="mb-4"><strong>Relatia cu celelalte animale: </strong>{{ category.relationship|safe }}</p>
+                        <p class="mb-4"><strong>Nevoi speciale: </strong>{{ category.special_needs|safe }}</p>
+                        <p class="mb-4"><strong>Motivul adoptiei: </strong>{{ category.adoption_reason|safe }}</p>
+                        <p class="mb-4"><strong>Conditii de adoptie: </strong>{{ category.terms|safe }}</p>
                         <p><strong>Varsta:</strong> {{ category.age }}</p>
                         <p><strong>Adapost:</strong> {{ category.location }}</p>
                         <!-- Adaugă mai multe detalii dacă este necesar -->
