@@ -91,22 +91,29 @@
         <!-- Animal Details Start -->
         <div class="container-xxl py-5">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <img src="{{ url_for('static', filename='images/' + category.image) }}" alt="{{ category.name }}" class="img-fluid">
+                <div class="row g-5 align-items-start">
+                    <div class="col-md-6 wow fadeIn" data-wow-delay="0.1s">
+                        <div class="row g-0 about-bg rounded overflow-hidden">
+                            <!-- Adaugă clasa img-thumbnail pentru a face imaginea mai mică -->
+                            <img class="img-fluid img-thumbnail w-100" src="{{ url_for('static', filename='img/' + category.image) }}" alt="{{ category.name }}">
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <h2>{{ category.name }}</h2>
-                        <p>{{ category.description }}</p>
-                        <p>Type: {{ category.type }}</p>
-                        <p>Age: {{ category.age }}</p>
-                        <p>Location: {{ category.location }}</p>
+                    <div class="col-md-6 wow fadeIn" data-wow-delay="0.5s">
+                        <h1 class="mb-4">{{ category.name }}</h1>
+                        <!-- Utilizează |safe pentru a permite interpretarea HTML -->
+                        <p class="mb-4">{{ category.description|safe }}</p>
+                        <p><strong>Varsta:</strong> {{ category.age }}</p>
+                        <p><strong>Adapost:</strong> {{ category.location }}</p>
                         <!-- Adaugă mai multe detalii dacă este necesar -->
+                        <div>
+                            <a href="adoption.html" class="btn btn-primary py-3 px-5 mt-3">Adopta-ma</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- Animal Details End -->
+
 
         <!-- Footer Start -->
         <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">

@@ -20,6 +20,12 @@ class Animal(db.Model):
     name = db.Column(db.String(100), nullable=False)
     image = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(255), nullable=False)
+    history = db.Column(db.String(255), nullable=True)
+    activities = db.Column(db.String(255), nullable=True)
+    relationship = db.Column(db.String(255), nullable=True)
+    special_needs = db.Column(db.String(255), nullable=True)
+    adoption_reason = db.Column(db.String(255), nullable=True)
+    terms = db.Column(db.String(255), nullable=True) 
     button_link = db.Column(db.String(100), nullable=False)
     type = db.Column(db.String(50), nullable=False)
     age = db.Column(db.String(20), nullable=False)
@@ -29,6 +35,12 @@ class AnimalForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     image = StringField('Image', validators=[DataRequired()])
     description = StringField('Description', validators=[DataRequired()])
+    history = StringField('History', validators=[DataRequired()])
+    activities = StringField('Activities', validators=[DataRequired()])
+    relationship = StringField('Relationship', validators=[DataRequired()])
+    special_needs = StringField('Special Needs', validators=[DataRequired()])
+    adoption_reason = StringField('Adoption Reason', validators=[DataRequired()])
+    terms = StringField('Terms', validators=[DataRequired()])
     button_link = StringField('Button Link', validators=[DataRequired()])
     type = StringField('Type', validators=[DataRequired()])
     age = StringField('Age', validators=[DataRequired()])
@@ -61,6 +73,22 @@ class ShelterForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     opening_hours = StringField('Opening Hours', validators=[DataRequired()])
     location = StringField('Location', validators=[DataRequired()])
+
+class AnimalAdminView(ModelView):
+    column_searchable_list = ['name', 'type', 'location']
+    form_excluded_columns = ['id']
+
+class EventAdminView(ModelView):
+    column_searchable_list = ['title', 'event_type', 'location']
+    form_excluded_columns = ['id']
+
+class ShelterAdminView(ModelView):
+    column_searchable_list = ['name', 'location']
+    form_excluded_columns = ['id']
+
+admin.add_view(AnimalAdminView(Animal, db.session))
+admin.add_view(EventAdminView(Event, db.session))
+admin.add_view(ShelterAdminView(Shelter, db.session))
 
 @app.route('/add_animal', methods=['GET', 'POST'])
 def add_animal():
