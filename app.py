@@ -1,5 +1,6 @@
-from flask import Flask, render_template, redirect, url_for, request, abort
+from flask import Flask, render_template, redirect, url_for, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import and_
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_wtf import FlaskForm
@@ -30,6 +31,7 @@ class Animal(db.Model):
     type = db.Column(db.String(50), nullable=False)
     age = db.Column(db.String(20), nullable=False)
     location = db.Column(db.String(50), nullable=False)
+    adopted = db.Column(db.String(5), nullable=True)
 
 class AnimalForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
@@ -45,6 +47,7 @@ class AnimalForm(FlaskForm):
     type = StringField('Type', validators=[DataRequired()])
     age = StringField('Age', validators=[DataRequired()])
     location = StringField('Location', validators=[DataRequired()])
+    adopted = StringField('Adopted', validators=[DataRequired()])
 
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -115,8 +118,9 @@ def add_animal():
 def index():
     animals = Animal.query.all()
     shelters = Shelter.query.all()
+    cities = [shelter.location.split(',')[-1] for shelter in Shelter.query.all()]
     print(animals)
-    return render_template('index.html', animals=animals, shelters=shelters)
+    return render_template('index.html', animals=animals, shelters=shelters, cities = cities)
 
 
 @app.route('/<category_name>')
@@ -130,18 +134,22 @@ def category_page(category_name):
 
 @app.route('/search_results')
 def search_results():
+    shelters = Shelter.query.all()
+    cities = [shelter.location.split(',')[-1] for shelter in Shelter.query.all()]
     try:
         animal_type = request.args.get('animal_type')
         age = request.args.get('age')
-        location = request.args.get('location')
+        animal_location = request.args.get('location')
 
         filtering_results = Animal.query.filter(
-            (not animal_type or Animal.type == animal_type) &
-            (not age or Animal.age == age) &
-            (not location or Animal.location == location)
+        and_(
+        (not animal_type or Animal.type == animal_type),
+        (not age or Animal.age == age),
+        (not animal_location or Animal.location.like(f"%{animal_location}%"))
+        )
         ).all()
 
-        return render_template('index.html', animals=filtering_results)
+        return render_template('index.html', animals=filtering_results, shelters = shelters, cities = cities)
     except Exception as e:
         print(str(e))
         abort(500)
@@ -150,8 +158,9 @@ def search_results():
 def index2():
     animals = Animal.query.all()
     shelters = Shelter.query.all()
+    cities = [shelter.location.split(',')[-1] for shelter in Shelter.query.all()]
     print(animals)
-    return render_template('index.html', animals=animals, shelters=shelters)
+    return render_template('index.html', animals=animals, shelters=shelters, cities = cities)
 
 @app.route('/add_event', methods=['GET', 'POST'])
 def add_event():
@@ -196,11 +205,8 @@ def about():
 
 @app.route('/contact.html')
 def contact():
-    return render_template('contact.html')
-
-@app.route('/adoption.html')
-def adoption_form():
-    return render_template('adoption.html')
+    shelters = Shelter.query.all()
+    return render_template('contact.html', shelters = shelters)
 
 @app.route('/events.html')
 def events():
@@ -228,23 +234,49 @@ def login():
 def category():
     return render_template('category.html')
 
+# WORK IN PROGRESS
+@app.route('/adoption_completed', methods= ['POST'])
+def adoption_completed():
+     name = request.form['name']
+     bday = request.form['bday']
+     ocupation = request.form['ocupation']
+     income = request.form['income']
+     experience = request.form['experience']
+     shelter = request.form['shelter']
+     animal = request.form['animal']
+     
+     print("NAME PLS: ", name)
+     print("DATE PLS: ", bday)
+     print("OCUPATION PLS: ", ocupation)
+     print("INCOME PLS: ", income)
+     print("EXPERIENCE PLS: ", experience)
+     print("SHELTER PLS: ", shelter)
+     print("ANIMAL PLS: ", animal)
 
-""" @app.route('/job-detail.html')
-def job_detail():
-    return render_template('job-detail.html')
+     return name + ' ' + bday + ' ' + ocupation + ' ' + income + ' ' + experience + ' ' + shelter + ' ' + animal
 
-@app.route('/job-list.html')
-def job_list():
-    return render_template('job-list.html')
+# cale ca sa generez animalele de la adapostul selectat
+@app.route('/animals_from_shelter/<shelter_name>')
+def get_animals_for_shelter(shelter_name):
+    animals = Animal.query.filter_by(location = shelter_name).all()
+    animals_data = [{'name': animal.name} for animal in animals]
+    return jsonify({'animals': animals_data})
 
-@app.route('/testimonial.html')
-def testimonial():
-    return render_template('testimonial.html')
+@app.route('/adoption.html')
+def adoption_form():
+    shelters = Shelter.query.all()
+    return render_template('adoption.html', shelters = shelters)
 
-@app.route('/404.html')
-def error():
-    return render_template('404.html')
- """
+@app.route('/adopt_animal')
+def adopt_from_button():
+    try:
+        animal_name = request.args.get("animal_name")
+        print(animal_name)
+        selected_animal = Animal.query.filter_by(name=animal_name).first()
+        return render_template("adoption.html", animal = selected_animal)
+    except Exception as e:
+        print(str(e))
+        abort(500)
 
 
 if __name__ == '__main__':

@@ -143,8 +143,9 @@
                         <div class="col-md-4">
                             <select name="location" class="form-select border-0">
                                 <option value="" selected>Oraș</option>
-                                <option value="Oraș 1">Oraș 1</option>
-                                <option value="Oraș 2">Oraș 2</option>
+                                {% for city in cities %} 
+                                <option value="{{ city }}">{{ city }}</option>
+                                {% endfor %}
                                 <!-- Adaugă altele după nevoie -->
                             </select>
                         </div>

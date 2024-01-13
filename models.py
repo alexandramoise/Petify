@@ -17,6 +17,7 @@ class Animal(db.Model):
     type = db.Column(db.String(50), nullable=False)
     age = db.Column(db.String(20), nullable=False)
     location = db.Column(db.String(50), nullable=False)
+    adopted = db.Column(db.String(5), nullable=True)
 
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)

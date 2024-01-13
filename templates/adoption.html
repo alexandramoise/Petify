@@ -153,7 +153,7 @@
                         <div class="card shadow-lg rounded">
                             <div class="card-body p-5">
                                 <h1 class="h3 mb-4 text-center">Formular pentru adoptie</h1>
-                                <form>
+                                <form action="{{ url_for('adoption_completed') }}" method="post">
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Numele tau </label>
                                         <input type="text" class="form-control" id="name" name="name" required>
@@ -171,11 +171,11 @@
                                                 <label for="student"> Student </label>
                                             </div>
                                             <div class="option">
-                                                <input type="radio" class="form-check-input" id="working" name="ocupation" value="working">
+                                                <input type="radio" class="form-check-input" id="working" name="ocupation" value="angajat">
                                                 <label for="working"> Angajat </label>
                                             </div>
                                             <div class="option">
-                                                <input type="radio" class="form-check-input" id="nothing" name="ocupation" value="nothing">
+                                                <input type="radio" class="form-check-input" id="nothing" name="ocupation" value="liber profesionist">
                                                 <label for="nothing"> Liber profesionist </label>
                                             </div>
                                         </div>
@@ -185,15 +185,15 @@
                                         <label for="income" class="form-label"> Venit lunar mediu - in lei </label>
                                         <div class="longer-radio-options">
                                             <div class="option">
-                                                <input type="radio" class="form-check-input" id="small" name="income" value="small">
+                                                <input type="radio" class="form-check-input" id="small" name="income" value="sub 2000">
                                                 <label for="small"> sub 2000 </label>
                                             </div>
                                             <div class="option">
-                                                <input type="radio" class="form-check-input" id="medium" name="income" value="medium">
+                                                <input type="radio" class="form-check-input" id="medium" name="income" value="2000 - 4000">
                                                 <label for="medium"> intre 2000 si 4000 </label>
                                             </div>
                                             <div class="option">
-                                                <input type="radio" class="form-check-input" id="big" name="income" value="big">
+                                                <input type="radio" class="form-check-input" id="big" name="income" value="peste 4000">
                                                 <label for="big"> peste 4000 </label>
                                             </div>
                                         </div>
@@ -204,15 +204,15 @@
                                         <label for="experience" class="form-label"> Ai / ai avut alte animale de companie? </label>
                                         <div class="radio-options">
                                                 <div class="option">
-                                                    <input type="radio" class="form-check-input" id="yes" name="experience" value="1">
+                                                    <input type="radio" class="form-check-input" id="yes" name="experience" value="Da">
                                                     <label for="yes"> Da, am</label>
                                                 </div>
                                                 <div class="option">
-                                                    <input type="radio" class="form-check-input" id="usedTo" name="experience" value="0">
+                                                    <input type="radio" class="form-check-input" id="usedTo" name="experience" value="Am avut">
                                                     <label for="usedTo"> Am avut </label>
                                                 </div>
                                                 <div class="option">
-                                                    <input type="radio" class="form-check-input" id="no" name="experience" value="-1">
+                                                    <input type="radio" class="form-check-input" id="no" name="experience" value="Nu">
                                                     <label for="no"> Nu </label>
                                                 </div>
                                             </div>
@@ -220,22 +220,34 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="shelter" class="form-label"> Alege un adapost 
-                                            <input list="shelters" name="shelter" />
-                                        </label>
-                                        <datalist id="shelters"> </datalist>
+                                        <label for="shelters" class="form-label"> Selecteaza un adapost </label>
+                                        {% if animal %}
+                                            <input type="text" readonly value="{{animal.location}}" name="shelter">
+                                        {% else %}
+                                            <input list="shelters" name="shelter" id="shelterInput" required />
+                                            <datalist id="shelters">
+                                                {% for shelter in shelters %}
+                                                    <option value="{{ shelter.name }}">
+                                                {% endfor %}
+                                            </datalist>
+                                        {% endif %}
                                     </div>
                                     
                                     <div class="mb-3">
-                                        <label for="animal" class="form-label"> Selecteaza un animal 
-                                            <input list="animals" name="animal" />
-                                        </label>
-                                        <datalist id="animals"> </datalist>
+                                        <label for="animal" class="form-label"> Selecteaza un animal </label>
+                                        {% if animal %}
+                                            <input type="text" readonly value="{{animal.name}}" name="animal">
+                                        {% else %}
+                                            <input list="animals" name="animal" id="animalInput" required />
+                                            <datalist id="animals">
+                                                <!-- Lista de animale va fi actualizată cu JavaScript -->
+                                            </datalist>
+                                        {% endif %}
                                     </div>
 
                                     </div>
                                     <div class="d-grid">
-                                        <button type="submit" class="btn btn-primary btn-block"> Aplica </button>
+                                        <button type="submit" class="btn btn-primary btn-block" onclick="alert('S-a apasat butonul!')"> Aplica </button>
                                     </div>
                                 </form>
                             </div>
@@ -318,6 +330,26 @@
 
 
     <script> 
+    // Actualizați lista de animale folosind AJAX
+    document.getElementById('shelterInput').addEventListener('change', function() {
+    var shelterName = this.value;
+    console.log("ADAPOST: ", shelterName)
+
+    fetch(`/animals_from_shelter/${shelterName}`)
+        .then(response => response.json())
+        .then(data => {
+            var animalsDatalist = document.getElementById('animals');
+            animalsDatalist.innerHTML = ''; // Curățați lista actuală de animale
+            data.animals.forEach(function(animal) {
+                var option = document.createElement('option');
+                option.value = animal.name;
+                animalsDatalist.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+
         const dateInput = document.getElementById('bday');
         dateInput.addEventListener('input', function () {
             const selectedDate = this.value;
@@ -371,64 +403,6 @@
             } else if (this.value === '-1') {
                 textareaAnswer.style.display = 'none';
                 //console.log("Fără textarea");
-            }
-        }
-
-        // verificare optiune selectata
-        function showSelected(e) {
-            console.log("Optiunea selectata: ", this.value);
-        }
-
-        // generare lista de adaposturi 
-        const shelters = ["Adapost frumos, Timisoara", "Centru pentru catei, Timisoara","La Pisici, Arad","Adapost incredibil, Sibiu", "Adapost minunat, Bucuresti"];
-        const sheltersDataList = document.getElementById("shelters");
-        shelters.forEach(function (shelterElement) {
-            const shelterOption = document.createElement("option");
-            shelterOption.value = shelterElement;
-            sheltersDataList.appendChild(shelterOption);
-        });
-
-        // optiunea pentru adapost
-        const shelterOptions = document.querySelectorAll('input[name="shelter"]');
-        for (const shelterOption of shelterOptions) {
-        shelterOption.addEventListener('change', getSelectedShelter);
-        }
-
-
-        const animalOptions = document.querySelectorAll('input[name="animal"]');
-        
-        // dictionar adapost - lista de animale
-        const animals = {};
-        animals["Adapost frumos, Timisoara"] = ["Caine Tomi", "Pisica Lulu"];
-        animals["Centru pentru catei, Timisoara"] = ["Caine Azorel", "Caine Patrocle", "Caine Rexi"];
-        animals["La Pisici, Arad"] = ["Pisica Serafina"];
-        animals["Adapost incredibil, Sibiu"] = ["Pisica Bela", "Pisica Missy"];
-        animals["Adapost minunat, Bucuresti"] = ["Papagal papagal", "Caine Tom"];
-
-        // generare animale din adapostul selectat
-        const animalDataList = document.getElementById("animals");
-        function getSelectedShelter(e) {
-            const selectedShelter = this.value;
-            console.log("Adapostul selectat: ", selectedShelter);
-
-            // golesc lista de animale
-            while (animalDataList.firstChild) {
-                animalDataList.removeChild(animalDataList.firstChild);
-            }
-
-            // am selectat adapost si incarc lista de animale din adapostul respectiv
-            if (selectedShelter && animals[selectedShelter]) {
-                console.log("Animalele din adapostul selectat: ", animals[selectedShelter]);
-                animals[selectedShelter].forEach(animal => {
-                    const animalOption = document.createElement("option");
-                    animalOption.value = animal;
-                    animalDataList.appendChild(animalOption);
-                });
-            } else {
-                // nu am selectat
-                const defaultOption = document.createElement("option");
-                defaultOption.value = "Te rog sa alegi un adapost";
-                animalDataList.appendChild(defaultOption);
             }
         }
 
