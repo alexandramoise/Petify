@@ -111,10 +111,10 @@
                         <p><strong>Varsta:</strong> {{ category.age }}</p>
                         <p><strong>Adapost:</strong> {{ category.location }}</p>
                         <!-- Adaugă mai multe detalii dacă este necesar -->
-                        {% if category.adopted == 'true' %}
-                             <button class="btn btn-primary" disabled> Adoptat 
-                        {% else %} 
+                        {% if category.adopted == 'false' %}
                             <a href="{{ url_for('adopt_from_button', animal_name=category.name) }}" class="btn btn-primary">Adoptă-mă</a>
+                        {% else %} 
+                            <button class="btn btn-primary" disabled> Adoptat 
                         {% endif %}
                     </div>
                 </div>

@@ -34,3 +34,15 @@ class ShelterForm(FlaskForm):
     opening_hours = StringField('Opening Hours', validators=[DataRequired()])
     location = StringField('Location', validators=[DataRequired()])
 
+
+class AdoptionForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()])
+    shelter = StringField('Shelter', validators=[DataRequired()])
+    animal = StringField('Animal', validators=[DataRequired()])
+    birthdate = StringField('Date of birth', validators=[DataRequired()])
+    ocupation = StringField('Ocupation', validators=[DataRequired()])
+    income = StringField('Income', validators=[DataRequired()])
+    experience = StringField('Experience', validators=[DataRequired()])
+    story = StringField('Story', validators=[DataRequired()])
+

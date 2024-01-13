@@ -34,3 +34,15 @@ class Shelter(db.Model):
     opening_hours = db.Column(db.String(50), nullable=False)
     location = db.Column(db.String(50), nullable=False)
 
+class Adoption(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), nullable=False) 
+    name = db.Column(db.String(500), nullable=False)
+    shelter = db.Column(db.String(100), nullable=False)
+    animal = db.Column(db.String(100), nullable=False)
+    birthdate = db.Column(db.String(10), nullable=False)
+    ocupation = db.Column(db.String(30), nullable=False)
+    income = db.Column(db.String(20), nullable=False)
+    experience = db.Column(db.String(10), nullable=False)
+    story = db.Column(db.String(1000), nullable=True)
+

@@ -31,7 +31,7 @@ class Animal(db.Model):
     type = db.Column(db.String(50), nullable=False)
     age = db.Column(db.String(20), nullable=False)
     location = db.Column(db.String(50), nullable=False)
-    adopted = db.Column(db.String(5), nullable=True)
+    adopted = db.Column(db.String(100), nullable=True)
 
 class AnimalForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
@@ -77,6 +77,29 @@ class ShelterForm(FlaskForm):
     opening_hours = StringField('Opening Hours', validators=[DataRequired()])
     location = StringField('Location', validators=[DataRequired()])
 
+class Adoption(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), nullable=False) 
+    name = db.Column(db.String(500), nullable=False)
+    shelter = db.Column(db.String(100), nullable=False)
+    animal = db.Column(db.String(100), nullable=False)
+    birthdate = db.Column(db.String(10), nullable=False)
+    ocupation = db.Column(db.String(30), nullable=False)
+    income = db.Column(db.String(20), nullable=False)
+    experience = db.Column(db.String(10), nullable=False)
+    story = db.Column(db.String(1000), nullable=True)
+
+class AdoptionForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()])
+    shelter = StringField('Shelter', validators=[DataRequired()])
+    animal = StringField('Animal', validators=[DataRequired()])
+    birthdate = StringField('Date of birth', validators=[DataRequired()])
+    ocupation = StringField('Ocupation', validators=[DataRequired()])
+    income = StringField('Income', validators=[DataRequired()])
+    experience = StringField('Experience', validators=[DataRequired()])
+    story = StringField('Story', validators=[DataRequired()])
+
 class AnimalAdminView(ModelView):
     column_searchable_list = ['name', 'type', 'location']
     form_excluded_columns = ['id']
@@ -89,9 +112,14 @@ class ShelterAdminView(ModelView):
     column_searchable_list = ['name', 'location']
     form_excluded_columns = ['id']
 
+class AdoptionAdminView(ModelView):
+    column_searchable_list = ['username', 'shelter', 'animal']
+    form_excluded_columns = ['id']
+
 admin.add_view(AnimalAdminView(Animal, db.session))
 admin.add_view(EventAdminView(Event, db.session))
 admin.add_view(ShelterAdminView(Shelter, db.session))
+admin.add_view(AdoptionAdminView(Adoption, db.session))
 
 @app.route('/add_animal', methods=['GET', 'POST'])
 def add_animal():
@@ -234,31 +262,46 @@ def login():
 def category():
     return render_template('category.html')
 
-# WORK IN PROGRESS
+# WORK IN PROGRESS: SA IAU NUMELE USERULUI LOGAT!!!!
 @app.route('/adoption_completed', methods= ['POST'])
 def adoption_completed():
-     name = request.form['name']
-     bday = request.form['bday']
-     ocupation = request.form['ocupation']
-     income = request.form['income']
-     experience = request.form['experience']
-     shelter = request.form['shelter']
-     animal = request.form['animal']
-     
-     print("NAME PLS: ", name)
-     print("DATE PLS: ", bday)
-     print("OCUPATION PLS: ", ocupation)
-     print("INCOME PLS: ", income)
-     print("EXPERIENCE PLS: ", experience)
-     print("SHELTER PLS: ", shelter)
-     print("ANIMAL PLS: ", animal)
+     user = "nume user logat"
+     form_name = request.form['name']
+     form_bday = request.form['bday']
+     form_ocupation = request.form['ocupation']
+     form_income = request.form['income']
+     form_experience = request.form['experience']
+     form_story = request.form['experienceStory']
+     form_shelter = request.form['shelter']
+     form_animal = request.form['animal']
 
-     return name + ' ' + bday + ' ' + ocupation + ' ' + income + ' ' + experience + ' ' + shelter + ' ' + animal
+     new_adoption = Adoption(
+        username = user,
+        name = form_name,
+        shelter = form_shelter,
+        animal = form_animal,
+        birthdate = form_bday,
+        ocupation = form_ocupation, 
+        income = form_income, 
+        experience = form_experience,
+        story = form_story
+     )
+     db.session.add(new_adoption)
+     db.session.commit()
+     print("ADOPTIA S A SALVAT")
+
+     adopted_animal = Animal.query.filter_by(name = form_animal).first()
+     adopted_animal.adopted = user
+     db.session.commit()
+     print("ANIMALUL MARCAT CA ADOPTAT")
+
+     return redirect(url_for('index'))
+     
 
 # cale ca sa generez animalele de la adapostul selectat
 @app.route('/animals_from_shelter/<shelter_name>')
 def get_animals_for_shelter(shelter_name):
-    animals = Animal.query.filter_by(location = shelter_name).all()
+    animals = Animal.query.filter_by(location=shelter_name, adopted='false').all()
     animals_data = [{'name': animal.name} for animal in animals]
     return jsonify({'animals': animals_data})
 
