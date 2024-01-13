@@ -7,6 +7,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired
 from flask_migrate import Migrate
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
 
@@ -15,6 +16,14 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Petify.db'
 db = SQLAlchemy(app)
 admin = Admin(app, name='Admin', template_mode='bootstrap3')
 migrate = Migrate(app, db)
+
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'petify.adoption@gmail.com'
+app.config['MAIL_PASSWORD'] = 'cuge vmcz gwzs dfpa'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 class Animal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,11 +80,13 @@ class Shelter(db.Model):
     name = db.Column(db.String(100), nullable=False)
     opening_hours = db.Column(db.String(20), nullable=False)
     location = db.Column(db.String(50), nullable=False)
+    email_address = db.Column(db.String(100), nullable=True)
 
 class ShelterForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     opening_hours = StringField('Opening Hours', validators=[DataRequired()])
     location = StringField('Location', validators=[DataRequired()])
+    email_address = StringField('Email address', validators=[DataRequired()])
 
 class Adoption(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -109,7 +120,7 @@ class EventAdminView(ModelView):
     form_excluded_columns = ['id']
 
 class ShelterAdminView(ModelView):
-    column_searchable_list = ['name', 'location']
+    column_searchable_list = ['name', 'location', 'email_address']
     form_excluded_columns = ['id']
 
 class AdoptionAdminView(ModelView):
@@ -235,6 +246,26 @@ def about():
 def contact():
     shelters = Shelter.query.all()
     return render_template('contact.html', shelters = shelters)
+
+@app.route('/contact_shelter', methods=['POST'])
+def contact_shelter():
+    shelters = Shelter.query.all()
+    form_name = request.form['name']
+    form_email = request.form['email']
+    form_shelter = request.form['shelter']
+    form_subject = request.form['subject']
+    form_text = request.form['text']
+    shelter = Shelter.query.filter_by(name=form_shelter).first()
+    receiver = shelter.email_address
+    try:
+        msg = Message(form_subject, sender='petify.adoption@gmail.com', recipients=[receiver])
+        msg.body = 'De la ' + form_name + ',' + form_email + '\n' + form_text
+        mail.send(msg)
+        print('EMAIL SENT SUCCESSFULLY!', 'success')
+    except Exception as e:
+        print(f'EMAIL ERROR: {str(e)}', 'error')
+    return redirect(url_for('index'))
+
 
 @app.route('/events.html')
 def events():
