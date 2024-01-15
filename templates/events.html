@@ -66,7 +66,11 @@
                     </div>
                     <a href="contact.html" class="nav-item nav-link">Contact</a>
                 </div>
-                <a href="login.html" id="autentificare" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block"></a>
+                {% if 'username' in session %}
+                    <a href="{{ url_for('logout') }}" class="btn btn-primary btn-block">{{ session['username'] }} <br> Log Out </a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-block">Autentificare</a>
+                {% endif %}
             </div>
         </nav>
         <!-- Navbar End -->

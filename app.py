@@ -1,6 +1,6 @@
-from flask import Flask, render_template, redirect, url_for, request, abort, jsonify
+from flask import Flask, render_template, redirect, url_for, request, abort, jsonify, flash, session
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import and_
+from sqlalchemy import and_, or_
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_wtf import FlaskForm
@@ -25,6 +25,16 @@ app.config['MAIL_PASSWORD'] = 'cuge vmcz gwzs dfpa'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+
+class UserAdminView(ModelView):
+    column_searchable_list = ['username', 'password']
+    form_excluded_columns = ['id']
 
 class Animal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -148,6 +158,7 @@ admin.add_view(EventAdminView(Event, db.session))
 admin.add_view(ShelterAdminView(Shelter, db.session))
 admin.add_view(AdoptionAdminView(Adoption, db.session))
 admin.add_view(CuriosityAdminView(Curiosity, db.session))
+admin.add_view(UserAdminView(User, db.session))
 
 @app.route('/add_animal', methods=['GET', 'POST'])
 def add_animal():
@@ -353,9 +364,62 @@ def questions():
 def register():
     return render_template('register.html')
 
+@app.route('/register_user', methods=['POST'])
+def register_user():
+    form_username = request.form["username"]
+    form_email = request.form["email"]
+    form_password = request.form["password"]
+    form_confirmpassword = request.form["confirmpassword"]
+
+    if form_password != form_confirmpassword:
+        flash('Parola și confirmarea sunt diferite', 'error')
+        return render_template('register.html')
+
+    already = User.query.filter(or_(User.username == form_username, User.email == form_email)).first()
+
+    if already:
+        flash('Datele sunt deja asociate unui cont', 'error')
+        return render_template('register.html')
+
+    new_user = User(
+        username=form_username,
+        email=form_email,
+        password=form_password
+    )
+
+    db.session.add(new_user)
+    db.session.commit()
+    try:
+        msg = Message('Cont Petify creat', sender='petify.adoption@gmail.com', recipients=[form_email])
+        msg.body = 'Bine ai venit in comunitatea noastra de iubitori de animale, ' + form_email + '\n #Petify #Adoption'
+        mail.send(msg)
+        print('EMAIL SENT SUCCESSFULLY!', 'success')
+    except Exception as e:
+        print(f'EMAIL ERROR: {str(e)}', 'error')
+    return redirect(url_for('login'))
+
+
+
 @app.route('/login.html')
 def login():
     return render_template('login.html')
+
+@app.route('/login_user', methods= ['POST'])
+def login_user():
+    form_username = request.form["username"]
+    form_password = request.form["password"]
+    account = User.query.filter((or_(User.username == form_username, User.email == form_username)) &(User.password == form_password)).first()
+    if account:
+        session['username'] = account.username
+        return redirect(url_for('index'))
+    else:
+        flash('Username sau parola incorecte')
+        return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('index'))
 
 @app.route('/category.html')
 def category():
@@ -364,7 +428,6 @@ def category():
 # WORK IN PROGRESS: SA IAU NUMELE USERULUI LOGAT!!!!
 @app.route('/adoption_completed', methods= ['POST'])
 def adoption_completed():
-     user = "nume user logat"
      form_name = request.form['name']
      form_bday = request.form['bday']
      form_ocupation = request.form['ocupation']
@@ -375,7 +438,7 @@ def adoption_completed():
      form_animal = request.form['animal']
 
      new_adoption = Adoption(
-        username = user,
+        username = form_name,
         name = form_name,
         shelter = form_shelter,
         animal = form_animal,
@@ -389,10 +452,23 @@ def adoption_completed():
      db.session.commit()
      print("ADOPTIA S A SALVAT")
 
+     shelter = Shelter.query.filter_by(name = form_shelter).first()
+     address = shelter.email_address
+
      adopted_animal = Animal.query.filter_by(name = form_animal).first()
-     adopted_animal.adopted = user
+     adopted_animal.adopted = form_name
      db.session.commit()
      print("ANIMALUL MARCAT CA ADOPTAT")
+
+     try:
+        msg = Message('Adoptie noua: ' + form_animal, sender='petify.adoption@gmail.com', recipients=[address])
+        msg.body = 'Utilizatorul ' + form_name + ' a ales sa adopte pe ' + form_animal + '\n ' + 'Datele utilizatorului: ' + '\n' + 'Data nasterii: ' + form_bday + '\n' + 'Ocupatie: ' + form_ocupation + '\n' + 'Venit: ' + form_income + '\n' + 'Experienta cu animalele: ' + form_experience
+        if form_story:
+            msg.body += 'Poveste: ' + form_story 
+        mail.send(msg)
+        print('ADOPTION EMAIL SENT SUCCESSFULLY!', 'success')
+     except Exception as e:
+        print(f'ADOPTION EMAIL ERROR: {str(e)}', 'error')
 
      return redirect(url_for('index'))
      

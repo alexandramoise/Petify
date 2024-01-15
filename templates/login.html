@@ -39,7 +39,19 @@
                         <div class="card shadow-lg rounded">
                             <div class="card-body p-5">
                                 <h1 class="h3 mb-4 text-center">Login</h1>
-                                <form id="login">
+
+                                {% with messages = get_flashed_messages(with_categories=true) %}
+                                    {% if messages %}
+                                        {% for category, message in messages %}
+                                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                                {{ message }}
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+
+                                <form id="login" action="{{ url_for('login_user') }}" method="post">
                                     <div class="mb-3">
                                         <label for="username" class="form-label">Username/Email</label>
                                         <input type="text" class="form-control" id="username" name="username" required>
@@ -67,8 +79,8 @@
         </div>
         <!-- End Pagina de login -->
     </div>
-    <script src="/static/js/login.js"></script>
-    <!-- Restul codului JavaScript -->
+    <!-- <script src="/static/js/login.js"></script>
+     Restul codului JavaScript -->
 </body>
 
 </html>
