@@ -2,8 +2,8 @@ Bine ai venit în aplicația noastră web dedicată adopțiilor de animale! Aici
 
 ### Instalare
 
-1. Clonează acest repository: `git clone [URL]`
-2. Intră în directorul aplicației: `cd nume-aplicatie`
+1. Clonează acest repository: `git clone [git@github.com:alexandramoise/Petify.git]`
+2. Intră în directorul aplicației: `cd Petify`
 3. Instalează dependințele cu `pip`: `pip install -r requirements.txt`
 
 ### Rulare
