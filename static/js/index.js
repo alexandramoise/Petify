@@ -16,3 +16,17 @@ function hideAnchorIfLoggedIn() {
 window.addEventListener('DOMContentLoaded', function () {
     hideAnchorIfLoggedIn();
 });
+
+function scrollToSection(Gasesteunanimalut) {
+    var section = document.getElementById(Gasesteunanimalut);
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function scrollToSection(Gasesteunadapost) {
+    var section = document.getElementById(Gasesteunadapost);
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+    }
+}
