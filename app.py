@@ -266,6 +266,28 @@ def contact_shelter():
         print(f'EMAIL ERROR: {str(e)}', 'error')
     return redirect(url_for('index'))
 
+@app.route('/ask_question', methods=['POST'])
+def ask_question():
+
+    form_name = request.form['name']
+    form_email = request.form['email']
+    form_subject = 'New Question from Petify Website'
+    form_text = request.form['question']
+    receiver = "micleamadalinasofia@gmail.com"
+
+    try:
+        msg = Message(form_subject, sender='petify.adoption@gmail.com', recipients=[receiver])
+        msg.body = f'From: {form_name}, {form_email}\n\nQuestion: {form_text}'
+        mail.send(msg)
+        print('EMAIL SENT SUCCESSFULLY!', 'success')
+    except Exception as e:
+        print(f'EMAIL ERROR: {str(e)}', 'error')
+
+    return redirect(url_for('index'))
+
+@app.route('/questions', methods=['GET'])
+def questions_page():
+    return render_template('questions.html')
 
 @app.route('/events.html')
 def events():
