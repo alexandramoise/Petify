@@ -46,3 +46,8 @@ class AdoptionForm(FlaskForm):
     experience = StringField('Experience', validators=[DataRequired()])
     story = StringField('Story', validators=[DataRequired()])
 
+class CuriosityForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    picture = StringField('Picture', validators=[DataRequired()])
+    content = StringField('Content', validators=[DataRequired()])
+

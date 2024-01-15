@@ -46,3 +46,9 @@ class Adoption(db.Model):
     experience = db.Column(db.String(10), nullable=False)
     story = db.Column(db.String(1000), nullable=True)
 
+class Curiosity(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    picture = db.Column(db.String(100), nullable=True)
+    content = db.Column(db.Text, nullable=False)
+

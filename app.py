@@ -8,6 +8,7 @@ from wtforms import StringField
 from wtforms.validators import DataRequired
 from flask_migrate import Migrate
 from flask_mail import Mail, Message
+import markdown
 
 app = Flask(__name__)
 
@@ -111,6 +112,17 @@ class AdoptionForm(FlaskForm):
     experience = StringField('Experience', validators=[DataRequired()])
     story = StringField('Story', validators=[DataRequired()])
 
+class Curiosity(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    picture = db.Column(db.String(100), nullable=True)
+    content = db.Column(db.Text, nullable=False)
+
+class CuriosityForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    picture = StringField('Picture', validators=[DataRequired()])
+    content = StringField('Content', validators=[DataRequired()])
+
 class AnimalAdminView(ModelView):
     column_searchable_list = ['name', 'type', 'location']
     form_excluded_columns = ['id']
@@ -127,10 +139,15 @@ class AdoptionAdminView(ModelView):
     column_searchable_list = ['username', 'shelter', 'animal']
     form_excluded_columns = ['id']
 
+class CuriosityAdminView(ModelView):
+    column_searchable_list = ['title']
+    form_excluded_columns = ['id']
+
 admin.add_view(AnimalAdminView(Animal, db.session))
 admin.add_view(EventAdminView(Event, db.session))
 admin.add_view(ShelterAdminView(Shelter, db.session))
 admin.add_view(AdoptionAdminView(Adoption, db.session))
+admin.add_view(CuriosityAdminView(Curiosity, db.session))
 
 @app.route('/add_animal', methods=['GET', 'POST'])
 def add_animal():
@@ -167,9 +184,26 @@ def category_page(category_name):
     category = Animal.query.filter_by(name=category_name).first()
     if category:
         return render_template('category_page.html', category=category)
-    #else:
-        #return render_template('category_not_found.html', category_name=category_name)
+    else:
+        return render_template('404.html')
 
+@app.route('/facts.html')
+def list_curiosities():
+    curiosities = Curiosity.query.all()
+    return render_template('facts.html', curiosities=curiosities)
+
+@app.route('/fact/<fact_name>')
+def fact_page(fact_name):
+    curiosity = Curiosity.query.filter_by(title=fact_name).first()
+    if curiosity:
+        content_html = markdown.markdown(curiosity.content)
+        page_title = curiosity.title
+        home_text = 'Curiozitati'
+        current_page = fact_name
+        background_image_url = url_for('static', filename='img/' + curiosity.picture)
+        return render_template('fact_page.html', curiosity=curiosity, content_html=content_html, page_title=page_title, home_text=home_text, current_page=current_page, background_image_url=background_image_url)
+    else:
+        return render_template('404.html')
 
 @app.route('/search_results')
 def search_results():
@@ -198,7 +232,6 @@ def index2():
     animals = Animal.query.all()
     shelters = Shelter.query.all()
     cities = [shelter.location.split(',')[-1] for shelter in Shelter.query.all()]
-    print(animals)
     return render_template('index.html', animals=animals, shelters=shelters, cities = cities)
 
 @app.route('/add_event', methods=['GET', 'POST'])
@@ -285,6 +318,23 @@ def ask_question():
 
     return redirect(url_for('index'))
 
+@app.route('/add_curiosity', methods=['GET', 'POST'])
+def add_curiosity():
+    form = CuriosityForm()
+    facts = Curiosity.query.all()
+
+    if form.validate_on_submit():
+        new_curiosity = Curiosity(
+            title=form.title.data,
+            content=form.content.data
+        )
+        db.session.add(new_curiosity)
+        db.session.commit()
+        return redirect(url_for('add_curiosity'))
+
+    return render_template('add_curiosity.html', form=form, facts=facts)
+
+
 @app.route('/questions', methods=['GET'])
 def questions_page():
     return render_template('questions.html')
@@ -294,10 +344,6 @@ def events():
     events = Event.query.all()
     print(events)
     return render_template('events.html', events=events)
-
-@app.route('/facts.html')
-def facts():
-    return render_template('facts.html')
 
 @app.route('/questions.html')
 def questions():

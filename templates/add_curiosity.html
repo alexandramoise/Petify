@@ -1,0 +1,21 @@
+<!-- add_curiosity.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaugă Curiozitate</title>
+</head>
+<body>
+    <h1>Adaugă Curiozitate</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <label for="title">Titlu:</label>
+        {{ form.title() }}
+        <label for="content">Conținut:</label>
+        {{ form.content() }}
+        <button type="submit">Adaugă Curiozitate</button>
+    </form>
+</body>
+</html>
